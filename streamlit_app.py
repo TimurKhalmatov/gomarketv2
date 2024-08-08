@@ -3,6 +3,9 @@ import streamlit as st
 
 
 def process_messages(in_prompt, role, session_state, in_client):
+    if 'message_thread' not in session_state:
+        session_state['message_thread'] = in_client.beta.threads.create()
+
     if "messages" not in session_state:
         session_state.messages = []
 
@@ -12,13 +15,17 @@ def process_messages(in_prompt, role, session_state, in_client):
 
     session_state.messages.append({"role": role, "content": in_prompt})
 
+    message_create = client.beta.threads.messages.create(
+        thread_id=session_state.message_thread.id,
+        role="user",
+        content=in_prompt,
+    )
+
     with st.chat_message(role):
         st.markdown(in_prompt)
 
     if role == "user":
         msg = ""
-        if 'message_thread' not in session_state:
-            session_state['message_thread'] = in_client.beta.threads.create()
 
         with in_client.beta.threads.runs.stream(
                 thread_id=session_state.message_thread.id,
