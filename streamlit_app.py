@@ -42,6 +42,7 @@ def process_messages(in_prompt, role, session_state, in_client):
     return session_state
 
 
+
 client = OpenAI(api_key=st.secrets.OPENAI_API_KEY)
 
 # Define a dictionary to map each selection to an assistant id and corresponding message
