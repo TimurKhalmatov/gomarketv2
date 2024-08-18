@@ -6,6 +6,12 @@ def process_messages(in_prompt, role, session_state, in_client):
     if 'message_thread' not in session_state:
         session_state['message_thread'] = in_client.beta.threads.create()
 
+    message_create = client.beta.threads.messages.create(
+        thread_id=session_state.message_thread.id,
+        role="user",
+        content=in_prompt,
+    )
+
     if "messages" not in session_state:
         session_state.messages = []
 
@@ -14,12 +20,6 @@ def process_messages(in_prompt, role, session_state, in_client):
             st.markdown(message["content"])
 
     session_state.messages.append({"role": role, "content": in_prompt})
-
-    message_create = client.beta.threads.messages.create(
-        thread_id=session_state.message_thread.id,
-        role="user",
-        content=in_prompt,
-    )
 
     with st.chat_message(role):
         st.markdown(in_prompt)
