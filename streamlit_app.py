@@ -43,41 +43,41 @@ def process_messages(in_prompt, role, session_state, in_client):
 
 
 
-client = OpenAI(api_key=st.secrets.OPENAI_API_KEY)
+# client = OpenAI(api_key=st.secrets.OPENAI_API_KEY)
+#
+# # Define a dictionary to map each selection to an assistant id and corresponding message
+# selection_actions = {
+#     'Lead Magnet':
+#         {'assistant_id': st.secrets.assistant_id_1, 'message': 'Creating Lead Magnet...'},
+#     'Funnel MARATHON / WEBINAR':
+#         {'assistant_id': st.secrets.assistant_id_2, 'message': 'Creating WEBINAR...'},
+#     'Warm-up plan for the product for 5 days':
+#         {'assistant_id': st.secrets.assistant_id_3, 'message': 'Creating Warm-up plan...'},
+#     'Sites':
+#         {'assistant_id': st.secrets.assistant_id_4, 'message': 'Creating Sites...'},
+#     'Storyteller':
+#         {'assistant_id': st.secrets.assistant_id_5, 'message': 'Creating Storyteller...'},
+# }
 
-# Define a dictionary to map each selection to an assistant id and corresponding message
-selection_actions = {
-    'Lead Magnet':
-        {'assistant_id': st.secrets.assistant_id_1, 'message': 'Creating Lead Magnet...'},
-    'Funnel MARATHON / WEBINAR':
-        {'assistant_id': st.secrets.assistant_id_2, 'message': 'Creating WEBINAR...'},
-    'Warm-up plan for the product for 5 days':
-        {'assistant_id': st.secrets.assistant_id_3, 'message': 'Creating Warm-up plan...'},
-    'Sites':
-        {'assistant_id': st.secrets.assistant_id_4, 'message': 'Creating Sites...'},
-    'Storyteller':
-        {'assistant_id': st.secrets.assistant_id_5, 'message': 'Creating Storyteller...'},
-}
-
-add_selectbox = st.sidebar.selectbox('What would you like to create?', selection_actions)
-
-if add_selectbox in selection_actions:
-    st.sidebar.markdown("# Fill in the fields")
-    text_input1 = st.sidebar.text_area("Product Data")
-    text_input2 = st.sidebar.text_area("Target Audience Data")
-
-    st.write(selection_actions[add_selectbox]['message'])
-
-    st.session_state['assistant_id'] = selection_actions[add_selectbox]['assistant_id']
-
-    # ... omitted for brevity
-    prompt = f"Product Data: {text_input1}, Target Audience Data: {text_input2}"
-    if st.sidebar.button('START'):
-        st.session_state = process_messages(prompt, "user", st.session_state, client)
-
-    # ... omitted for brevity
-    if prompt := st.chat_input("What is up?"):
-        st.session_state = process_messages(prompt, "user", st.session_state, client)
+# add_selectbox = st.sidebar.selectbox('What would you like to create?', selection_actions)
+#
+# if add_selectbox in selection_actions:
+#     st.sidebar.markdown("# Fill in the fields")
+#     text_input1 = st.sidebar.text_area("Product Data")
+#     text_input2 = st.sidebar.text_area("Target Audience Data")
+#
+#     st.write(selection_actions[add_selectbox]['message'])
+#
+#     st.session_state['assistant_id'] = selection_actions[add_selectbox]['assistant_id']
+#
+#     # ... omitted for brevity
+#     prompt = f"Product Data: {text_input1}, Target Audience Data: {text_input2}"
+#     if st.sidebar.button('START'):
+#         st.session_state = process_messages(prompt, "user", st.session_state, client)
+#
+#     # ... omitted for brevity
+#     if prompt := st.chat_input("What is up?"):
+#         st.session_state = process_messages(prompt, "user", st.session_state, client)
 
 if st.sidebar.button("Записать аудио"):
     recognizer = sr.Recognizer()
