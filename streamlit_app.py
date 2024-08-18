@@ -2,7 +2,6 @@ from openai import OpenAI
 import streamlit as st
 
 
-
 def process_messages(in_prompt, role, session_state, in_client):
     if 'message_thread' not in session_state:
         session_state['message_thread'] = in_client.beta.threads.create()
