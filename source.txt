@@ -1,6 +1,5 @@
 from openai import OpenAI
 import streamlit as st
-import speech_recognition as sr
 
 
 def process_messages(in_prompt, role, session_state, in_client):
@@ -42,6 +41,7 @@ def process_messages(in_prompt, role, session_state, in_client):
     return session_state
 
 
+
 client = OpenAI(api_key=st.secrets.OPENAI_API_KEY)
 
 # Define a dictionary to map each selection to an assistant id and corresponding message
@@ -77,20 +77,3 @@ if add_selectbox in selection_actions:
     # ... omitted for brevity
     if prompt := st.chat_input("What is up?"):
         st.session_state = process_messages(prompt, "user", st.session_state, client)
-
-if st.sidebar.button("Записать аудио"):
-    recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        st.write("Говорите что-нибудь...")
-        audio = recognizer.listen(source)
-        st.write("Аудио записано!")
-
-        # Транскрибация аудио
-        try:
-            text = recognizer.recognize_google(audio, language="ru-RU")
-            st.write("Транскрибированный текст:")
-            text_input1 = st.write(text)
-        except sr.UnknownValueError:
-            st.write("Не удалось распознать аудио")
-        except sr.RequestError as e:
-            st.write(f"Ошибка службы распознавания: {e}")
