@@ -3,44 +3,44 @@ import streamlit as st
 import speech_recognition as sr
 
 
-def process_messages(in_prompt, role, session_state, in_client):
-    if 'message_thread' not in session_state:
-        session_state['message_thread'] = in_client.beta.threads.create()
-
-    message_create = client.beta.threads.messages.create(
-        thread_id=session_state.message_thread.id,
-        role="user",
-        content=in_prompt,
-    )
-
-    if "messages" not in session_state:
-        session_state.messages = []
-
-    for message in session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-    session_state.messages.append({"role": role, "content": in_prompt})
-
-    with st.chat_message(role):
-        st.markdown(in_prompt)
-
-    if role == "user":
-        msg = ""
-
-        with in_client.beta.threads.runs.stream(
-                thread_id=session_state.message_thread.id,
-                assistant_id=session_state['assistant_id']
-        ) as stream:
-            for event in stream:
-                # Print the text from text delta events
-                if event.event == "thread.message.delta" and event.data.delta.content:
-                    msg = msg + str(event.data.delta.content[0].text.value)
-        response = st.write(msg)
-        session_state.messages.append({"role": "assistant", "content": response})
-
-    return session_state
-
+# def process_messages(in_prompt, role, session_state, in_client):
+#     if 'message_thread' not in session_state:
+#         session_state['message_thread'] = in_client.beta.threads.create()
+#
+#     message_create = client.beta.threads.messages.create(
+#         thread_id=session_state.message_thread.id,
+#         role="user",
+#         content=in_prompt,
+#     )
+#
+#     if "messages" not in session_state:
+#         session_state.messages = []
+#
+#     for message in session_state.messages:
+#         with st.chat_message(message["role"]):
+#             st.markdown(message["content"])
+#
+#     session_state.messages.append({"role": role, "content": in_prompt})
+#
+#     with st.chat_message(role):
+#         st.markdown(in_prompt)
+#
+#     if role == "user":
+#         msg = ""
+#
+#         with in_client.beta.threads.runs.stream(
+#                 thread_id=session_state.message_thread.id,
+#                 assistant_id=session_state['assistant_id']
+#         ) as stream:
+#             for event in stream:
+#                 # Print the text from text delta events
+#                 if event.event == "thread.message.delta" and event.data.delta.content:
+#                     msg = msg + str(event.data.delta.content[0].text.value)
+#         response = st.write(msg)
+#         session_state.messages.append({"role": "assistant", "content": response})
+#
+#     return session_state
+#
 
 
 # client = OpenAI(api_key=st.secrets.OPENAI_API_KEY)
@@ -88,7 +88,11 @@ if st.sidebar.button("Записать аудио"):
 
         # Транскрибация аудио
         try:
-            text = recognizer.recognize_google(audio, language="ru-RU")
+            text = recognizer.recognize_google_cloud(
+                audio,
+                credentials_json=st.secrets.GOOGLE_CLOUD_SPEECH_CREDENTIALS,
+                language="ru-RU",)
+            # text = recognizer.recognize_google(audio, language="ru-RU")
             st.write("Транскрибированный текст:")
             text_input1 = st.write(text)
         except sr.UnknownValueError:
